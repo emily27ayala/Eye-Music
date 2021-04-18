@@ -27,6 +27,7 @@ class SortByAuthor implements Comparator<AudioElement>
 }
 
 public class MusicHub {
+
     private final List<Album> albums = new LinkedList<>();
     private final List<PlayList> playlists;
     private final List<AudioElement> elements;
@@ -44,6 +45,18 @@ public class MusicHub {
         this.loadElements();
         this.loadAlbums();
         this.loadPlaylists();
+    }
+
+    public List<PlayList> getPlaylists() {
+        return playlists;
+    }
+
+    public List<AudioElement> getElements() {
+        return elements;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
     }
 
     public void addElement(AudioElement element) {

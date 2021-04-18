@@ -22,7 +22,6 @@ public class PlayList implements Serializable {
         elementUUIDs.add(element);
     }
 
-
     public String getTitle() {
         return title;
     }

@@ -1,0 +1,11 @@
+Model\Genre.class
+Model\PlayList.class
+Model\AudioBook.class
+Controller\ClientConnection.class
+View\MainView.class
+Model\Album.class
+Model\Category.class
+Controller\SimpleClient.class
+Model\Song.class
+Model\AudioElement.class
+Model\Language.class
