@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * This thread is responsible to handle client connection.
@@ -174,11 +175,12 @@ public class ServerThread extends Thread {
 					theHub.addPlaylist(pl);
 					output.writeObject("Available elements: ");
 
-					Iterator<AudioElement> itael = theHub.elements();
+					/*Iterator<AudioElement> itael = theHub.elements();
 					while (itael.hasNext()) {
 						AudioElement ae = itael.next();
 						System.out.println(ae.getTitle());
-					}
+					}*/
+					System.out.println(theHub.getElements());
 					output.writeObject(theHub.getElements());
 					while (commande.charAt(0)!= 'n') 	{
 						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
@@ -214,6 +216,63 @@ public class ServerThread extends Thread {
 					}
 					System.out.println("Playlist deleted!");
 
+					break;
+				case 'y':
+					//create a new playlist from existing elements
+					System.out.println("Existing playlists:");
+					itpl = theHub.playlists();
+					while (itpl.hasNext()) {
+						 pl = itpl.next();
+						System.out.println(pl.getTitle());
+					}
+					output.writeObject(theHub.getPlaylists());
+					System.out.println("Type the name of the playlist you wish to create:");
+					playListTitle = (String)input.readObject();
+					for(int i=0;i<theHub.getPlaylists().size();i++){
+						if(playListTitle==theHub.getPlaylists().get(i).getTitle()){
+							pl = theHub.getPlaylists().get(i);
+						}
+					}
+
+					//theHub.addPlaylist(pl);
+					output.writeObject("Available elements: ");
+
+					/*Iterator<AudioElement> itael = theHub.elements();
+					while (itael.hasNext()) {
+						AudioElement ae = itael.next();
+						System.out.println(ae.getTitle());
+					}*/
+					System.out.println(theHub.getElements());
+					output.writeObject(theHub.getElements());
+					while (commande.charAt(0)!= 'n') 	{
+						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
+						String elementTitle =  (String)input.readObject();
+						try {
+							theHub.addElementToPlayList(elementTitle, playListTitle);
+							output.writeObject("Success");
+						} catch (NoPlayListFoundException | NoElementFoundException ex) {
+							output.writeObject(ex.getMessage());
+						}
+
+						System.out.println("Type y to add a new one, n to end");
+						commande = (String)input.readObject();
+					}
+					System.out.println("New song added!");
+
+					break;
+				case 'm':
+
+					output.writeObject(theHub.getElements());
+					songTitle = (String)input.readObject();
+					String audioFilePath = null;
+					List<AudioElement> listElem = theHub.getElements();
+					for (int i=0;i<listElem.size();i++) {
+						if (listElem.get(i).getTitle().equals(songTitle)) {
+							audioFilePath = "..\\EyeMusic-Server\\src\\main\\resources\\" + listElem.get(i).getContent();
+						}
+					}
+					output.writeObject(audioFilePath);
+					System.out.println("song playing");
 					break;
 				case 's':
 					//save elements, albums, playlists

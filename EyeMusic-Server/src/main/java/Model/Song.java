@@ -14,7 +14,7 @@ public class Song extends AudioElement implements Serializable {
         this.setGenre(genre);
     }
 
-    public Song (Element xmlElement) {
+    public Song (Element xmlElement) throws Exception {
         super(xmlElement);
         this.setGenre(xmlElement.getElementsByTagName("genre").item(0).getTextContent());
     }

@@ -221,7 +221,9 @@ public class SimpleClient {
 					System.out.println(stri);
 
 					listElem = (List<AudioElement>) input.readObject();
-
+					for (int i=0;i<listElem.size();i++){
+						System.out.println(listElem.get(i).getTitle());
+					}
 
 					while (userChoice.charAt(0)!= 'n') 	{
 						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
@@ -255,10 +257,59 @@ public class SimpleClient {
 					System.out.println("Playlist deleted!");
 					mainView.printAvailableCommands();
 					break;
+				case 'y':
+					//create a new playlist from existing elements
+					System.out.println("Add an existing song or audiobook to an existing playlist");
+					System.out.println("Playlists:");
+					listPlay= (List<PlayList>) input.readObject();
+					for (int i=0;i<listPlay.size();i++){
+						System.out.println(listPlay.get(i).getTitle());
+					}
+					System.out.println("Type the name of the playlist you wish to create:");
+					playListTitle = scan.nextLine();
+					output.writeObject(playListTitle);
+					stri = (String) input.readObject() ;
+					System.out.println(stri);
+
+					listElem = (List<AudioElement>) input.readObject();
+					for (int i=0;i<listElem.size();i++){
+						System.out.println(listElem.get(i).getTitle());
+					}
+
+					while (userChoice.charAt(0)!= 'n') 	{
+						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
+						String elementTitle = scan.nextLine();
+						output.writeObject(elementTitle);
+						stri = (String) input.readObject() ;
+						System.out.println(stri);
+
+						System.out.println("Type y to add a new one, n to end");
+						userChoice = scan.nextLine();
+						output.writeObject(userChoice);
+
+					}
+					System.out.println("Playlist created!");
+					mainView.printAvailableCommands();
+					break;
+				case 'm':
+					System.out.println("Select a Song to play:");
+					List<AudioElement> listy = (List<AudioElement>) input.readObject();
+					for (int i=0;i<listy.size();i++){
+						System.out.println(listy.get(i).getTitle());
+					}
+					userChoice = scan.nextLine();
+					output.writeObject(userChoice);
+
+					String audioFilePath = (String) input.readObject();
+					AudioPlayer player = new AudioPlayer();
+					player.play(audioFilePath);
+					mainView.printAvailableCommands();
+					break;
 				case 's':
 					//save elements, albums, playlists
 					String str = (String)input.readObject();
 					mainView.printAvailableCommands();
+
 					break;
 				default:
 

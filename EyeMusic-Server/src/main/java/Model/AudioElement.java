@@ -12,6 +12,14 @@ public abstract class AudioElement implements Serializable {
     protected String	content;
 
 
+    public AudioElement (String title, String artist, int lengthInSeconds, String id, String content) {
+        this.title = title;
+        this.artist = artist;
+        this.lengthInSeconds = lengthInSeconds;
+        this.uuid = UUID.fromString(id);
+        this.content = content;
+    }
+
     public AudioElement (String title, String artist, int lengthInSeconds, String content) {
         this.title = title;
         this.artist = artist;
@@ -20,8 +28,9 @@ public abstract class AudioElement implements Serializable {
         this.uuid =  UUID.randomUUID();
     }
 
-    public AudioElement (Element xmlElement) {
-        {
+    public AudioElement (Element xmlElement)  throws Exception
+    {
+        try {
             title = xmlElement.getElementsByTagName("title").item(0).getTextContent();
             artist = xmlElement.getElementsByTagName("artist").item(0).getTextContent();
             lengthInSeconds = Integer.parseInt(xmlElement.getElementsByTagName("length").item(0).getTextContent());
@@ -36,6 +45,8 @@ public abstract class AudioElement implements Serializable {
             if ((uuid == null)  || (uuid.isEmpty()))
                 this.uuid = UUID.randomUUID();
             else this.uuid = UUID.fromString(uuid);
+        } catch (Exception ex) {
+            throw ex;
         }
     }
 
@@ -78,5 +89,10 @@ public abstract class AudioElement implements Serializable {
         parentElement.appendChild(contentElement);
 
     }
+
+    public String getContent() {
+        return content;
+    }
+
 
 }

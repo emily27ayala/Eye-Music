@@ -1,3 +1,4 @@
+Controller\AudioPlayer.class
 Model\Genre.class
 Model\PlayList.class
 Model\AudioBook.class

@@ -13,6 +13,8 @@ public class MainView {
         System.out.println("l: add a new audiobook");
         System.out.println("p: create a new playlist from existing songs and audio books");
         System.out.println("-: delete an existing playlist");
+        System.out.println("y: add a song to an existing playlist");
+        System.out.println("m: play a song");
         System.out.println("s: save elements, albums, playlists");
         System.out.println("q: quit program");
     }

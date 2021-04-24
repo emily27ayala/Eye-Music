@@ -16,7 +16,7 @@ public class AudioBook extends AudioElement implements Serializable {
         this.setCategory(category);
     }
 
-    public AudioBook (Element xmlElement) {
+    public AudioBook (Element xmlElement) throws Exception {
         super(xmlElement);
         this.setLanguage(xmlElement.getElementsByTagName("language").item(0).getTextContent());
         this.setCategory(xmlElement.getElementsByTagName("category").item(0).getTextContent());
