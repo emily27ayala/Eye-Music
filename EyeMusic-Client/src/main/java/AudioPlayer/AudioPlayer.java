@@ -1,4 +1,4 @@
-package Controller;
+package AudioPlayer;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,6 +16,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author www.codejava.net
  *
  */
+
 public class AudioPlayer {
 
     // size of the byte buffer used to read/write the audio stream

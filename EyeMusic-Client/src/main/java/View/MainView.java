@@ -2,6 +2,12 @@ package View;
 
 public class MainView {
 
+    public MainView() { }
+
+    public void caseCommand (){
+
+    }
+
     public static void printAvailableCommands() {
         System.out.println("t: display the album titles, ordered by date");
         System.out.println("g: display songs of an album, ordered by genre");
