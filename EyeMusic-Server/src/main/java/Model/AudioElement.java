@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.*;
 import org.w3c.dom.*;
 
+/**
+ * cette classe permet de créer des objets AudioElements
+ */
 public abstract class AudioElement implements Serializable {
     protected String  	title;
     protected String 	artist;
@@ -11,7 +14,14 @@ public abstract class AudioElement implements Serializable {
     protected UUID    	uuid;
     protected String	content;
 
-
+    /**
+     *  Ceci est un constructeur pour la classe AudioElement. Il permet au constructeur de créer de nouvel AudioElement
+     * @param title titre de l'AudioElement
+     * @param artist artiste de l'AudioElement
+     * @param lengthInSeconds durée de l'AudioElement (en seconde)
+     * @param id l'ID de l'element
+     * @param content nom du fichier de l'element audio
+     */
     public AudioElement (String title, String artist, int lengthInSeconds, String id, String content) {
         this.title = title;
         this.artist = artist;
@@ -20,6 +30,13 @@ public abstract class AudioElement implements Serializable {
         this.content = content;
     }
 
+    /**
+     * Ceci est un constructeur pour la classe AudioElement. Il permet au constructeur de créer de nouvel AudioElement qui na pas de UUID
+     * @param title titre de l'AudioElement
+     * @param artist artiste de l'AudioElement
+     * @param lengthInSeconds durée de l'AudioElement (en seconde)
+     * @param content nom du fichier de l'element audio
+     */
     public AudioElement (String title, String artist, int lengthInSeconds, String content) {
         this.title = title;
         this.artist = artist;
@@ -28,6 +45,11 @@ public abstract class AudioElement implements Serializable {
         this.uuid =  UUID.randomUUID();
     }
 
+    /**
+     * ceci est un constructeur permettant de convertir les elements xml en AudioElement
+     * @param xmlElement prent un element du fichier elements.xml pour le convertir en objet AudioElement
+     * @throws Exception releve une exception
+     */
     public AudioElement (Element xmlElement)  throws Exception
     {
         try {
@@ -50,22 +72,43 @@ public abstract class AudioElement implements Serializable {
         }
     }
 
+    /**
+     * getter permetant de recuperer L'UUID
+     * @return retourne un UUID
+     */
     public UUID getUUID() {
         return this.uuid;
     }
 
+    /**
+     * getter permetant de recuperer L'artiste l'element audio
+     * @return retourne un l'artiste de l' audio
+     */
     public String getArtist() {
         return this.artist;
     }
 
+    /**
+     * getter permetant de recuperer Le titre
+     * @return retourne le titre
+     */
     public String getTitle() {
         return this.title;
     }
 
+    /**
+     * permet d'afficher les informations de l'AudioElement
+     * @return retourne les informations en String
+     */
     public String toString() {
         return "Title = " + this.title + ", Artist = " + this.artist + ", Length = " + this.lengthInSeconds + ", Content = " + this.content;
     }
 
+    /**
+     * un fonction qui permet de creer un element xml pour pouvoir l' ecrire dans le fichier XML
+     * @param document c'est le nom du document à modifier avec son chemin
+     * @param parentElement nom de l element qui englobe l'element present pour l'ecrire dans le fichier
+     */
     public void createXMLElement(Document document, Element parentElement)
     {
         Element nameElement = document.createElement("title");
@@ -90,6 +133,10 @@ public abstract class AudioElement implements Serializable {
 
     }
 
+    /**
+     * getter permetant de recuperer la contenue de l'element audio
+     * @return retourne la contenue
+     */
     public String getContent() {
         return content;
     }

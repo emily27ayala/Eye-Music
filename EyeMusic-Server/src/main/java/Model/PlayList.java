@@ -4,29 +4,46 @@ import java.io.Serializable;
 import java.util.*;
 import org.w3c.dom.*;
 
+/**
+ * cette classe permet de créer des objets playlists
+ */
 public class PlayList implements Serializable {
     private final String title;
     private final UUID uuid;
     private ArrayList<UUID> elementUUIDs;
 
 
-
+    /**
+     * constructeur de Playlists
+     * @param title titre du playlists
+     */
     public PlayList (String title) {
         this.title = title;
         this.uuid = UUID.randomUUID();
         this.elementUUIDs = new ArrayList<>();
     }
 
+    /**
+     * permet d'ajouter des chansons à la playlists
+     * @param element UUID d'un element audio
+     */
     public void addElement (UUID element)
     {
         elementUUIDs.add(element);
     }
 
-
+    /**
+     *  getter pour le titre de la playlist
+     * @return retourne le titre de la playlist
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * ceci est un constructeur permettant de convertir les elements xml en Album
+     * @param xmlElement prent un element du fichier playlists.xml pour le convertir en objet Playlist
+     */
     public PlayList (Element xmlElement) {
         {
             this.title = xmlElement.getElementsByTagName("title").item(0).getTextContent();
@@ -65,7 +82,11 @@ public class PlayList implements Serializable {
         }
     }
 
-
+    /**
+     * un fonction qui permet de creer un element xml pour pouvoir l' ecrire dans le fichier XML
+     * @param document c'est le nom du document à modifier avec son chemin
+     * @param parentElement nom de l element qui englobe l'element present pour l'ecrire dans le fichier
+     */
     public void createXMLElement(Document document, Element parentElement)
     {
         Element playlistElement = document.createElement("playlist");

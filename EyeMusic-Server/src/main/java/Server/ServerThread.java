@@ -24,10 +24,17 @@ public class ServerThread extends Thread {
 	private ObjectOutputStream output;
 	private String commande;
 
+	/**
+	 * Constructeur de ServerThread
+	 * @param socket le port sur lequel le server va communique avec le client
+	 */
     public ServerThread(Socket socket) {
         this.socket = socket;
     }
- 
+
+	/**
+	 * fonction qui lance le serverThread
+	 */
     public void run() {
 
         try {
@@ -36,9 +43,10 @@ public class ServerThread extends Thread {
 			output = new ObjectOutputStream(socket.getOutputStream());
  
 			commande = (String)input.readObject();  //read the object received through the stream and deserialize it
-			System.out.println("server received a command: " + commande);
+
 
 			commandeCase(commande,output,input);
+
 
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
@@ -49,8 +57,10 @@ public class ServerThread extends Thread {
             ex.printStackTrace();
         } finally {
 			try {
-				//output.close();
+				output.close();
 				input.close();
+				System.out.println("Server Closing");
+				System.exit(0);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -58,16 +68,26 @@ public class ServerThread extends Thread {
 
     }
 
+	/**
+	 * fonction qui prend en compte les commandes de l'utilisateur
+	 * @param commande  la commande tapez par l'utilisateur
+	 * @param output port de sortie
+	 * @param input port d'entrée
+	 * @throws IOException
+	 * @throws ClassNotFoundException exception lorsque l'element n'est pas trouvé
+	 */
     public void commandeCase(String commande,ObjectOutputStream output,ObjectInputStream input) throws IOException, ClassNotFoundException {
 		MusicHub theHub = new MusicHub ();
 		String albumTitle;
-		String delim = "-";
+		String delim = "~";
 
 		while (commande.charAt(0)!= 'q') 	{
 			switch (commande.charAt(0)) 	{
 				case 't':
 					//album titles, ordered by date
 					output.writeObject(theHub.getAlbumsTitlesSortedByDate());		//serialize and write the Student object to the stream
+					System.out.println("album list ordered by date send");
+
 					break;
 				case 'g':
 					//songs of an album, sorted by genre
@@ -80,13 +100,14 @@ public class ServerThread extends Thread {
 								.map(Object::toString)
 								.collect(Collectors.joining(delim));
 						output.writeObject(songList);
+						System.out.println("Songs of an album send sorted by genre;");
 					} catch (NoAlbumFoundException ex) {
 						output.writeObject("No album found with the requested title " + ex.getMessage());
 					}
 					break;
 				case 'd':
 					//songs of an album
-					System.out.println("Songs of an album will be displayed; \nenter the album name, available albums are:\n");
+
 					output.writeObject(theHub.getAlbumsTitlesSortedByDate());
 					albumTitle = (String)input.readObject();
 					try {
@@ -94,13 +115,16 @@ public class ServerThread extends Thread {
 								.map(Object::toString)
 								.collect(Collectors.joining(delim));
 						output.writeObject(songList2);
+						System.out.println("Songs of an album send");
 					} catch (NoAlbumFoundException ex) {
 						output.writeObject("No album found with the requested title " + ex.getMessage());
 					}
+
 					break;
 				case 'u':
 					//audiobooks ordered by author
 					output.writeObject(theHub.getAudiobooksTitlesSortedByAuthor());
+					System.out.println("audio Book list send");
 					break;
 				case 'c':
 					// add a new song
@@ -108,14 +132,13 @@ public class ServerThread extends Thread {
 					List<String> song = new ArrayList<String>(Arrays.asList(songReceived.split(delim)));
 					Song songElement = new Song(song.get(0), song.get(2), Integer.parseInt(song.get(3)), song.get(4), song.get(1));
 					theHub.addElement(songElement);
-					System.out.println("New element list: ");
-					Iterator<AudioElement> it = theHub.elements();
-					while (it.hasNext()) System.out.println(it.next().getTitle());
+
 					output.writeObject("Song created!");
 					String listSong = theHub.getElements().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listSong);
+					System.out.println("new song created");
 					break;
 				case 'a':
 					// add a new album
@@ -123,33 +146,23 @@ public class ServerThread extends Thread {
 					List<String> album = new ArrayList<String>(Arrays.asList(albumReceived.split(delim)));
 					Album albumElement = new Album(album.get(0), album.get(1), Integer.parseInt(album.get(2)), album.get(3) );
 					theHub.addAlbum(albumElement);
-					System.out.println("New list of albums: ");
-					Iterator<Album> ita = theHub.albums();
-					while (ita.hasNext()) System.out.println(ita.next().getTitle());
+
 					output.writeObject("Album created!");
 					String listAlbum = theHub.getAlbums().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listAlbum);
+					System.out.println("new album created");
 					break;
 				case '+':
 					//add a song to an album:
-					Iterator<AudioElement> itae = theHub.elements();
-					while (itae.hasNext()) {
-						AudioElement ae = itae.next();
-						if ( ae instanceof Song) System.out.println(ae.getTitle());
-					}
+
 					String listElem = theHub.getElements().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElem);
 					String songTitle = (String)input.readObject();
-					System.out.println("Type the name of the album you wish to enrich. Available albums: ");
-					Iterator<Album> ait = theHub.albums();
-					while (ait.hasNext()) {
-						Album al = ait.next();
-						System.out.println(al.getTitle());
-					}
+
 					output.writeObject(theHub.getAlbumsTitlesSortedByDate());
 					String titleAlbum = (String)input.readObject();
 					try {
@@ -172,13 +185,8 @@ public class ServerThread extends Thread {
 					break;
 				case 'p':
 					//create a new playlist from existing elements
-					System.out.println("Existing playlists:");
-					Iterator<PlayList> itpl = theHub.playlists();
-					while (itpl.hasNext()) {
-						PlayList pl = itpl.next();
-						System.out.println(pl.getTitle());
-					}
-					String listElemPlaylist = theHub.getPlaylists().stream()
+
+					String listElemPlaylist = theHub.getListOfPlaylistTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemPlaylist);
@@ -187,40 +195,28 @@ public class ServerThread extends Thread {
 					PlayList pl = new PlayList(playListTitle);
 					theHub.addPlaylist(pl);
 					output.writeObject("Available elements: ");
-					/*Iterator<AudioElement> itael = theHub.elements();
-					while (itael.hasNext()) {
-						AudioElement ae = itael.next();
-						System.out.println(ae.getTitle());
-					}*/
-					//System.out.println(theHub.getElements());
+
 					String listElemPlaylistAvailable = theHub.getElements().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemPlaylistAvailable);
 					while (commande.charAt(0)!= 'n') 	{
-						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
 						String elementTitle =  (String)input.readObject();
 						try {
 							theHub.addElementToPlayList(elementTitle, playListTitle);
-							output.writeObject("Success");
+							output.writeObject("Song successly added");
 						} catch (NoPlayListFoundException | NoElementFoundException ex) {
 							output.writeObject(ex.getMessage());
 						}
 
-						System.out.println("Type y to add a new one, n to end");
 						commande = (String)input.readObject();
 					}
 					System.out.println("Playlist created!");
 					break;
 				case '-':
 					//delete a playlist
-					System.out.println("Delete an existing playlist. Available playlists:");
-					Iterator<PlayList> itp = theHub.playlists();
-					while (itp.hasNext()) {
-						PlayList p = itp.next();
-						System.out.println(p.getTitle());
-					}
-					String listElemPlaylistAvail = theHub.getPlaylists().stream()
+					System.out.println("Deleting an existing playlist.");
+					String listElemPlaylistAvail = theHub.getListOfPlaylistTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemPlaylistAvail);
@@ -234,38 +230,27 @@ public class ServerThread extends Thread {
 					System.out.println("Playlist deleted!");
 					break;
 				case 'y':
-					//create a new playlist from existing elements
-					System.out.println("Existing playlists:");
-					itpl = theHub.playlists();
-					while (itpl.hasNext()) {
-						 pl = itpl.next();
-						System.out.println(pl.getTitle());
-					}
-					String listElemPlaylistAv = theHub.getPlaylists().stream()
+					//add a new song to an existing playlist
+
+					String listElemPlaylistAv = theHub.getListOfPlaylistTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemPlaylistAv);
-					System.out.println("Type the name of the playlist you wish to create:");
+
 					playListTitle = (String)input.readObject();
 					for(int i=0;i<theHub.getPlaylists().size();i++){
-						if(playListTitle==theHub.getPlaylists().get(i).getTitle()){
+						if(playListTitle.equals(theHub.getPlaylists().get(i).getTitle())){
 							pl = theHub.getPlaylists().get(i);
 						}
 					}
-					//theHub.addPlaylist(pl);
-					output.writeObject("Available elements: ");
-					/*Iterator<AudioElement> itael = theHub.elements();
-					while (itael.hasNext()) {
-						AudioElement ae = itael.next();
-						System.out.println(ae.getTitle());
-					}*/
+
 					String listElemAv = theHub.getElements().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					System.out.println(listElemAv);
 					output.writeObject(listElemAv);
 					while (commande.charAt(0)!= 'n') 	{
-						System.out.println("Type the name of the audio element you wish to add or 'n' to exit:");
+
 						String elementTitle =  (String)input.readObject();
 						try {
 							theHub.addElementToPlayList(elementTitle, playListTitle);
@@ -273,10 +258,11 @@ public class ServerThread extends Thread {
 						} catch (NoPlayListFoundException | NoElementFoundException ex) {
 							output.writeObject(ex.getMessage());
 						}
-						System.out.println("Type y to add a new one, n to end");
+
 						commande = (String)input.readObject();
 					}
 					System.out.println("New song added!");
+
 					break;
 				case 'm':
 					String listElemA = theHub.getElements().stream()
@@ -286,11 +272,12 @@ public class ServerThread extends Thread {
 					songTitle = (String)input.readObject();
 					String audioFilePath = null;
 					List<AudioElement> listElemRelou = theHub.getElements();
-					for (int i=0;i<listElemRelou.size();i++) {
-						if (listElemRelou.get(i).getTitle().equals(songTitle)) {
-							audioFilePath = "..\\EyeMusic-Server\\src\\main\\resources\\" + listElemRelou.get(i).getContent();
+					for (AudioElement audioElement : listElemRelou) {
+						if (audioElement.getTitle().equals(songTitle)) {
+							audioFilePath = "..\\EyeMusic-Server\\src\\main\\resources\\" + audioElement.getContent();
 						}
 					}
+					System.out.println(audioFilePath);
 					output.writeObject(audioFilePath);
 					System.out.println("song playing");
 					break;

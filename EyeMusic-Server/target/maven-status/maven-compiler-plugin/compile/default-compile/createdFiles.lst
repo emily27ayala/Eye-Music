@@ -1,9 +1,6 @@
 Controller\XMLHandler.class
 Model\Genre.class
-Controller\FirstServer.class
 Model\PlayList.class
-Controller\AbstractServer.class
-Controller\ServerThread.class
 Controller\SortByDate.class
 Model\Album.class
 Model\Category.class
@@ -16,5 +13,4 @@ Model\AudioBook.class
 Controller\NoPlayListFoundException.class
 Controller\NoElementFoundException.class
 Controller\SortByGenre.class
-Controller\ServerConnection.class
 Model\AudioElement.class

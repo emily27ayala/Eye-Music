@@ -5,6 +5,9 @@ import Model.*;
 import java.util.*;
 import org.w3c.dom.*;
 
+/**
+ * permet le trie de la liste des albums (Date)
+ */
 class SortByDate implements Comparator<Album>
 {
     public int compare(Album a1, Album a2) {
@@ -12,6 +15,9 @@ class SortByDate implements Comparator<Album>
     }
 }
 
+/**
+ * permet le trie de la liste des albums (Genre)
+ */
 class SortByGenre implements Comparator<Song>
 {
     public int compare(Song s1, Song s2) {
@@ -19,6 +25,9 @@ class SortByGenre implements Comparator<Song>
     }
 }
 
+/**
+ * permet le trie de la liste des albums (auteur)
+ */
 class SortByAuthor implements Comparator<AudioElement>
 {
     public int compare(AudioElement e1, AudioElement e2) {
@@ -26,6 +35,9 @@ class SortByAuthor implements Comparator<AudioElement>
     }
 }
 
+/**
+ * cette classe permet de gerer les differents fonctionnalité de l application tels que la supression, creation et modification des elements
+ */
 public class MusicHub {
 
     private final List<Album> albums = new LinkedList<>();
@@ -39,6 +51,9 @@ public class MusicHub {
 
     private final XMLHandler xmlHandler = new XMLHandler();
 
+    /**
+     * constructeur de MusicHub
+     */
     public MusicHub () {
         playlists = new LinkedList<>();
         elements = new LinkedList<>();
@@ -47,30 +62,74 @@ public class MusicHub {
         this.loadPlaylists();
     }
 
+    /**
+     * permet de recuperer tous les playlists
+     * @return retoune la liste des playlists
+     */
     public List<PlayList> getPlaylists() {
         return playlists;
     }
 
+    /**
+     * permet de recuperer tous les elements audios
+     * @return retourne la liste des elements audios
+     */
     public List<AudioElement> getElements() {
         return elements;
     }
 
+    /**
+     * recupere la liste des albums
+     * @return retourne une liste des albums
+     */
     public List<Album> getAlbums() {
         return albums;
     }
 
+    /**
+     * recupere la liste des playlists avec leur titre
+     * @return retourne la liste des titres des playlists
+     */
+    public List<String> getListOfPlaylistTitle(){
+
+        List<String> ListOfPlaylistTitle = new LinkedList<>();
+
+        for (PlayList playlist : playlists) {
+            ListOfPlaylistTitle.add(playlist.getTitle());
+        }
+
+        return ListOfPlaylistTitle;
+    }
+
+    /**
+     * permet d ajouter un element audio à la liste des elements
+     * @param element element audio
+     */
     public void addElement(AudioElement element) {
         elements.add(element);
     }
 
+    /**
+     * permet d ajouter un album à la liste des albums
+     * @param album à besoin d'un objet album
+     */
     public void addAlbum(Album album) {
         albums.add(album);
     }
 
+    /**
+     * permet d ajouter une playlist à la liste des playlists
+     * @param playlist à besoin d'un objet playlist
+     */
     public void addPlaylist(PlayList playlist) {
         playlists.add(playlist);
     }
 
+    /**
+     * permet de supprimer une playlist
+     * @param playListTitle le titre de la playlist à supprimer
+     * @throws NoPlayListFoundException exception lorsqu'on ne trouve pas la playlist
+     */
     public void deletePlayList(String playListTitle) throws NoPlayListFoundException {
 
         PlayList thePlayList = null;
@@ -87,18 +146,34 @@ public class MusicHub {
         if (!result) throw new NoPlayListFoundException("Playlist " + playListTitle + " not found!");
     }
 
+    /**
+     * permet de faire une loop sur la liste des albums
+     * @return une liste Iterator<>
+     */
     public Iterator<Album> albums() {
         return albums.listIterator();
     }
 
+    /**
+     * permet de faire une loop sur la liste des playlists
+     * @return une liste Iterator<>
+     */
     public Iterator<PlayList> playlists() {
         return playlists.listIterator();
     }
 
+    /**
+     * permet de faire une loop sur la liste albums
+     * @return une liste Iterator<>
+     */
     public Iterator<AudioElement> elements() {
         return elements.listIterator();
     }
 
+    /**
+     * permet de repcuperer la liste des chansons d'un album triée par date
+     * @return retourne une Liste d'élement audio triée par date
+     */
     public String getAlbumsTitlesSortedByDate() {
         StringBuilder titleList = new StringBuilder();
         albums.sort(new SortByDate());
@@ -107,6 +182,10 @@ public class MusicHub {
         return titleList.toString();
     }
 
+    /**
+     * permet de repcuperer la liste des chansons d'un album triée par auteur
+     * @return retourne une Liste d'élement audio triée par auteur
+     */
     public String getAudiobooksTitlesSortedByAuthor() {
         StringBuilder titleList = new StringBuilder();
         List<AudioElement> audioBookList = new ArrayList<>();
@@ -119,6 +198,12 @@ public class MusicHub {
         return titleList.toString();
     }
 
+    /**
+     * permet de recuperer la liste des chanson d'un album
+     * @param albumTitle c'est le titre de l'album
+     * @return retourne la liste des element audio de l'album
+     * @throws NoAlbumFoundException exception lorsqu'on ne trouve pas l'album
+     */
     public List<AudioElement> getAlbumSongs (String albumTitle) throws NoAlbumFoundException {
         Album theAlbum = null;
         ArrayList<AudioElement> songsInAlbum = new ArrayList<>();
@@ -141,6 +226,12 @@ public class MusicHub {
 
     }
 
+    /**
+     * getter qui permet d avoir la Liste des albums triée en Genre
+     * @param albumTitle c'est le titre de l'album
+     * @return une liste triéé (genre) de l album
+     * @throws NoAlbumFoundException exception lorsqu'on ne trouve pas l'album
+     */
     public List<Song> getAlbumSongsSortedByGenre (String albumTitle) throws NoAlbumFoundException {
         Album theAlbum = null;
         ArrayList<Song> songsInAlbum = new ArrayList<>();
@@ -164,6 +255,13 @@ public class MusicHub {
 
     }
 
+    /**
+     * ajoute un nouvel element à l'album
+     * @param elementTitle titre du nouvel element audio
+     * @param albumTitle titre de l'album
+     * @throws NoAlbumFoundException exception lorsqu'on ne trouve pas l'album
+     * @throws NoElementFoundException exception lorsqu'on ne trouve pas l'élément audio
+     */
     public void addElementToAlbum(String elementTitle, String albumTitle) throws NoAlbumFoundException, NoElementFoundException
     {
         Album theAlbum = null;
@@ -196,6 +294,13 @@ public class MusicHub {
 
     }
 
+    /**
+     * ajoute un nouvel element à la playlist
+     * @param elementTitle titre du nouvel element audio
+     * @param playListTitle titre de la playlist
+     * @throws NoPlayListFoundException exception lorsqu'on ne trouve pas la playlist
+     * @throws NoElementFoundException exception lorsqu'on ne trouve pas l'élément audio
+     */
     public void addElementToPlayList(String elementTitle, String playListTitle) throws NoPlayListFoundException, NoElementFoundException
     {
         PlayList thePlaylist = null;
@@ -229,6 +334,9 @@ public class MusicHub {
 
     }
 
+    /**
+     * permet de charger les albums à partir d'un fichier XML
+     */
     private void loadAlbums () {
         NodeList albumNodes = xmlHandler.parseXMLFile(ALBUMS_FILE_PATH);
         if (albumNodes == null) return;
@@ -247,6 +355,9 @@ public class MusicHub {
         }
     }
 
+    /**
+     * permet de charger les playlists à partir d'un fichier XML
+     */
     private void loadPlaylists () {
         NodeList playlistNodes = xmlHandler.parseXMLFile(PLAYLISTS_FILE_PATH);
         if (playlistNodes == null) return;
@@ -265,6 +376,9 @@ public class MusicHub {
         }
     }
 
+    /**
+     * permet de recuperer les element d'un fichier XML
+     */
     private void loadElements () {
         NodeList audioelementsNodes = xmlHandler.parseXMLFile(ELEMENTS_FILE_PATH);
         if (audioelementsNodes == null) return;
@@ -292,7 +406,9 @@ public class MusicHub {
         }
     }
 
-
+    /**
+     * permet de sauvegarder la liste des albums
+     */
     public void saveAlbums () {
         Document document = xmlHandler.createXMLDocument();
         if (document == null) return;
@@ -309,6 +425,9 @@ public class MusicHub {
         xmlHandler.createXMLFile(document, ALBUMS_FILE_PATH);
     }
 
+    /**
+     * permet de sauvegarder la liste des playlists
+     */
     public void savePlayLists () {
         Document document = xmlHandler.createXMLDocument();
         if (document == null) return;
@@ -325,6 +444,9 @@ public class MusicHub {
         xmlHandler.createXMLFile(document, PLAYLISTS_FILE_PATH);
     }
 
+    /**
+     * permet de sauvegarder les elements audio dans un fichier XML
+     */
     public void saveElements() {
         Document document = xmlHandler.createXMLDocument();
         if (document == null) return;

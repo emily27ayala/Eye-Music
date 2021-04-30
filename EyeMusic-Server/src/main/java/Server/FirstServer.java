@@ -1,13 +1,20 @@
 package Server;
 
 import java.io.*;
-import java.net.*; 
+import java.net.*;
 
+/**
+ * classe fille de AbstractServeur qui permet d' avoir un premier serveur
+ */
 public class FirstServer extends AbstractServer
 {
 	private String ip = "localhost";
 	private ServerSocket ss;
-	
+
+	/**
+	 * cette fonction permet d'établir une connection avec le Client
+	 * @param ip "address" de base
+	 */
 	public void connect(String ip) {
 		try {
 			//the server socket is defined only by a port (its IP is localhost)

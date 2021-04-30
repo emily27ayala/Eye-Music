@@ -11,13 +11,18 @@ import java.io.IOException;
 import java.io.File;
 
 
-
+/**
+ * classe qui perrmet de gerer les fichiers XML
+ */
 public class XMLHandler {
     TransformerFactory transformerFactory;
     Transformer transformer;
     DocumentBuilderFactory documentFactory;
     DocumentBuilder documentBuilder;
 
+    /**
+     * constructeur de la classe XMLHandler
+     */
     public XMLHandler() {
         try {
             transformerFactory = TransformerFactory.newInstance();
@@ -29,6 +34,11 @@ public class XMLHandler {
         }
     }
 
+    /**
+     * permet de créer un fichier XML
+     * @param document Nom du Document en question
+     * @param filePath chemin d'acces vers le fishier
+     */
     public void createXMLFile(Document document, String filePath)
     {
         try {
@@ -49,11 +59,20 @@ public class XMLHandler {
         }
     }
 
+    /**
+     * creer un document XML
+     * @return retourne un Document
+     */
     public Document createXMLDocument()
     {
         return documentBuilder.newDocument();
     }
 
+    /**
+     * creer un noeud dans l'element
+     * @param filePath le chemin d'acces en parametre
+     * @return retourne un noeux de l'element
+     */
     public NodeList parseXMLFile (String filePath) {
         NodeList elementNodes = null;
         try {
