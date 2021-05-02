@@ -102,6 +102,36 @@ public class MusicHub {
     }
 
     /**
+     * recupere la liste des albums avec leur titre
+     * @return retourne la liste des titres des albums
+     */
+    public List<String> getListOfAlbumTitle(){
+
+        List<String> ListOfAlbumTitle = new LinkedList<>();
+
+        for (Album album : albums) {
+            ListOfAlbumTitle.add(album.getTitle());
+        }
+
+        return ListOfAlbumTitle;
+    }
+
+    /**
+     * recupere la liste des AudioElement avec leur titre
+     * @return retourne la liste des titres des AudioElement
+     */
+    public List<String> getListOfAudioElementTitle(){
+
+        List<String> ListOfAudioElementTitle = new LinkedList<>();
+
+        for (AudioElement audioElement : elements) {
+            ListOfAudioElementTitle.add(audioElement.getTitle());
+        }
+
+        return ListOfAudioElementTitle;
+    }
+
+    /**
      * permet d ajouter un element audio à la liste des elements
      * @param element element audio
      */
@@ -148,7 +178,7 @@ public class MusicHub {
 
     /**
      * permet de faire une loop sur la liste des albums
-     * @return une liste Iterator<>
+     * @return une liste Iterator
      */
     public Iterator<Album> albums() {
         return albums.listIterator();
@@ -156,7 +186,7 @@ public class MusicHub {
 
     /**
      * permet de faire une loop sur la liste des playlists
-     * @return une liste Iterator<>
+     * @return une liste Iterator
      */
     public Iterator<PlayList> playlists() {
         return playlists.listIterator();
@@ -164,7 +194,7 @@ public class MusicHub {
 
     /**
      * permet de faire une loop sur la liste albums
-     * @return une liste Iterator<>
+     * @return une liste Iterator
      */
     public Iterator<AudioElement> elements() {
         return elements.listIterator();
@@ -224,6 +254,32 @@ public class MusicHub {
             }
         return songsInAlbum;
 
+    }
+
+    /**
+     * permet de recuperer la liste des audio element d'album en string
+     * @param ae une liste de audio element
+     * @return list de string
+     */
+    public List<String> getAlbumAudioElementSortedByGenreString(List<AudioElement> ae){
+        List<String> string = new LinkedList<>();
+        for(AudioElement song : ae){
+            string.add(song.getTitle());
+        }
+        return string;
+    }
+
+    /**
+     * permet de recuperer la liste des chanson d'album en string
+     * @param songs une liste de Song
+     * @return list de string
+     */
+    public List<String> getAlbumSongsSortedByGenreString(List<Song> songs){
+        List<String> string = new LinkedList<>();
+        for(Song song : songs){
+            string.add(song.getTitle());
+        }
+            return string;
     }
 
     /**

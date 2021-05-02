@@ -96,7 +96,7 @@ public class ServerThread extends Thread {
 					albumTitle = (String)input.readObject();
 					System.out.println("Title album received!\n");
 					try {
-						String songList = theHub.getAlbumSongsSortedByGenre(albumTitle).stream()
+						String songList = theHub.getAlbumSongsSortedByGenreString(theHub.getAlbumSongsSortedByGenre(albumTitle)).stream()
 								.map(Object::toString)
 								.collect(Collectors.joining(delim));
 						output.writeObject(songList);
@@ -111,7 +111,7 @@ public class ServerThread extends Thread {
 					output.writeObject(theHub.getAlbumsTitlesSortedByDate());
 					albumTitle = (String)input.readObject();
 					try {
-						String songList2 = theHub.getAlbumSongs(albumTitle).stream()
+						String songList2 = theHub.getAlbumAudioElementSortedByGenreString(theHub.getAlbumSongs(albumTitle)).stream()
 								.map(Object::toString)
 								.collect(Collectors.joining(delim));
 						output.writeObject(songList2);
@@ -134,7 +134,7 @@ public class ServerThread extends Thread {
 					theHub.addElement(songElement);
 
 					output.writeObject("Song created!");
-					String listSong = theHub.getElements().stream()
+					String listSong = theHub.getListOfAudioElementTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listSong);
@@ -148,7 +148,7 @@ public class ServerThread extends Thread {
 					theHub.addAlbum(albumElement);
 
 					output.writeObject("Album created!");
-					String listAlbum = theHub.getAlbums().stream()
+					String listAlbum = theHub.getListOfAlbumTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listAlbum);
@@ -157,7 +157,7 @@ public class ServerThread extends Thread {
 				case '+':
 					//add a song to an album:
 
-					String listElem = theHub.getElements().stream()
+					String listElem = theHub.getListOfAudioElementTitle().stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElem);
@@ -196,7 +196,7 @@ public class ServerThread extends Thread {
 					theHub.addPlaylist(pl);
 					output.writeObject("Available elements: ");
 
-					String listElemPlaylistAvailable = theHub.getElements().stream()
+					String listElemPlaylistAvailable = theHub.getAlbumAudioElementSortedByGenreString(theHub.getElements()).stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemPlaylistAvailable);
@@ -244,7 +244,7 @@ public class ServerThread extends Thread {
 						}
 					}
 
-					String listElemAv = theHub.getElements().stream()
+					String listElemAv = theHub.getAlbumAudioElementSortedByGenreString(theHub.getElements()).stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					System.out.println(listElemAv);
@@ -265,7 +265,7 @@ public class ServerThread extends Thread {
 
 					break;
 				case 'm':
-					String listElemA = theHub.getElements().stream()
+					String listElemA = theHub.getAlbumAudioElementSortedByGenreString(theHub.getElements()).stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(delim));
 					output.writeObject(listElemA);

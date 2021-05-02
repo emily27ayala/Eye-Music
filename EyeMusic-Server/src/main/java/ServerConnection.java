@@ -8,6 +8,7 @@ public class ServerConnection
 {
 	/**
 	 * la fonction principale
+	 * @param args argument
 	 */
 	public static void main (String[] args) {
 		AbstractServer as = new FirstServer();
